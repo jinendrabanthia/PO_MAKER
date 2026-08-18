@@ -15,6 +15,13 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Plus, Trash2 } from "lucide-react"
@@ -23,24 +30,24 @@ type OrderFormValues = z.infer<typeof OrderSchema>
 
 interface CreateOrderFormProps {
   initialData?: Partial<OrderFormValues>
+  templates: any[]
 }
 
-export function CreateOrderForm({ initialData }: CreateOrderFormProps) {
+export function CreateOrderForm({ initialData, templates }: CreateOrderFormProps) {
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(OrderSchema) as any,
     defaultValues: {
       orderNumber: `ORD-${Date.now()}`,
-      customerId: "00000000-0000-0000-0000-000000000000", // Mock UUID for now
-      reference: initialData?.reference || "",
-      agency: initialData?.agency || "",
+      companyTemplateId: templates[0]?.id || "",
       advancePayment: initialData?.advancePayment || 0,
       remark: initialData?.remark || "",
       totalQty: 0,
       grandTotal: 0,
       products: initialData?.products?.length ? initialData.products : [
         {
+          category: "General",
+          imageUrl: "",
           productCode: "",
-          designCode: "",
           quantity: 1,
           netPrice: 0,
           sizes: [],
@@ -139,12 +146,12 @@ export function CreateOrderForm({ initialData }: CreateOrderFormProps) {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit as any)} className="space-y-8 pb-10">
         
-        {/* Section A: Customer Info */}
+        {/* Section A: Template & Order Info */}
         <Card>
           <CardHeader>
-            <CardTitle>Customer & Order Info</CardTitle>
+            <CardTitle>Template & Order Info</CardTitle>
           </CardHeader>
-          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <FormField
               control={form.control as any}
               name="orderNumber"
@@ -160,26 +167,22 @@ export function CreateOrderForm({ initialData }: CreateOrderFormProps) {
             />
             <FormField
               control={form.control as any}
-              name="reference"
+              name="companyTemplateId"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Reference</FormLabel>
-                  <FormControl>
-                    <Input placeholder="e.g. Surat Dreams" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control as any}
-              name="agency"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Agency</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Agency Name" {...field} />
-                  </FormControl>
+                  <FormLabel>Company Template</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a template" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {templates.map(t => (
+                        <SelectItem key={t.id} value={t.id}>{t.templateName}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}
@@ -210,8 +213,9 @@ export function CreateOrderForm({ initialData }: CreateOrderFormProps) {
               size="sm"
               onClick={() =>
                 append({
+                  category: "General",
+                  imageUrl: "",
                   productCode: "",
-                  designCode: "",
                   quantity: 1,
                   netPrice: 0,
                   sizes: [],
@@ -255,12 +259,12 @@ export function CreateOrderForm({ initialData }: CreateOrderFormProps) {
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pr-10">
                     <FormField
                       control={form.control as any}
-                      name={`products.${index}.productCode`}
+                      name={`products.${index}.category`}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Product Code</FormLabel>
+                          <FormLabel>Category</FormLabel>
                           <FormControl>
-                            <Input placeholder="Code" {...field} />
+                            <Input placeholder="e.g. Kurtis" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -268,12 +272,25 @@ export function CreateOrderForm({ initialData }: CreateOrderFormProps) {
                     />
                     <FormField
                       control={form.control as any}
-                      name={`products.${index}.designCode`}
+                      name={`products.${index}.imageUrl`}
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Design Code</FormLabel>
+                          <FormLabel>Photo URL</FormLabel>
                           <FormControl>
-                            <Input placeholder="Design" {...field} />
+                            <Input placeholder="https://..." {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control as any}
+                      name={`products.${index}.productCode`}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Code</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Code" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

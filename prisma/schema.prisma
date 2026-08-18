@@ -33,21 +33,33 @@ model User {
   updatedAt    DateTime @updatedAt
 }
 
-model Customer {
-  id        String   @id @default(uuid())
-  name      String
-  city      String?
-  mobile    String?
-  agency    String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  orders    Order[]
+model CompanyTemplate {
+  id              String   @id @default(uuid())
+  templateName    String   // e.g. "SNK Default"
+  
+  // Left Header (Buyer Details)
+  buyerName       String   // e.g. SNK
+  buyerCity       String?
+  buyerMobile     String?
+  buyerRef        String?
+  buyerAgency     String?
+
+  // Right Header (Seller Details)
+  sellerName      String   // e.g. READIPRINT FASHIONS
+  sellerAddress   String?
+  sellerPhone     String?
+  sellerEmail     String?
+  sellerGstin     String?
+  sellerWebsite   String?
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  orders          Order[]
 }
 
 model Product {
   id           String   @id @default(uuid())
   productCode  String   @unique
-  designCode   String?
   defaultPrice Float    @default(0)
   defaultSizes Json     @default("[]") // Array of string sizes
   imageUrl     String?
@@ -57,34 +69,32 @@ model Product {
 }
 
 model Order {
-  id             String          @id @default(uuid())
-  orderNumber    String          @unique
-  customerId     String
-  customer       Customer        @relation(fields: [customerId], references: [id])
-  reference      String?
-  agency         String?
-  orderDate      DateTime?
-  advancePayment Float           @default(0)
-  advanceMode    String?
-  remark         String?
-  status         OrderStatus     @default(DRAFT)
-  totalQty       Int             @default(0)
-  grandTotal     Float           @default(0)
-  createdAt      DateTime        @default(now())
-  updatedAt      DateTime        @updatedAt
-  products       OrderProduct[]
-  files          UploadedFile[]
-  jobs           ProcessingJob[]
-  logs           AuditLog[]
-  generatedDocs  GeneratedDocument[]
+  id                String          @id @default(uuid())
+  orderNumber       String          @unique
+  companyTemplateId String
+  companyTemplate   CompanyTemplate @relation(fields: [companyTemplateId], references: [id])
+  orderDate         DateTime?
+  advancePayment    Float           @default(0)
+  advanceMode       String?
+  remark            String?
+  status            OrderStatus     @default(DRAFT)
+  totalQty          Int             @default(0)
+  grandTotal        Float           @default(0)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+  products          OrderProduct[]
+  files             UploadedFile[]
+  jobs              ProcessingJob[]
+  logs              AuditLog[]
+  generatedDocs     GeneratedDocument[]
 }
 
 model OrderProduct {
   id          String   @id @default(uuid())
   orderId     String
   order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  category    String   @default("General") // To separate sheets
   productCode String?
-  designCode  String?
   quantity    Int      @default(1)
   netPrice    Float    @default(0)
   sizeCount   Int      @default(1)

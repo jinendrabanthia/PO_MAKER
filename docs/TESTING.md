@@ -19,7 +19,7 @@
    - Render PDF to image and use Playwright visual comparisons (or diff tools) to detect layout regressions.
 
 5. **End-to-End (E2E) Tests**
-   - Simulate a full WhatsApp event -> extraction -> calculation -> PDF generation pipeline.
+   - Simulate a full web event -> extraction -> calculation -> PDF generation pipeline.
 
 ## Critical Path Coverage
-A test must exist for: WhatsApp event -> order creation -> file upload mock -> extraction mock -> validation -> calculation -> PDF generation.
+A test must exist for: Web event -> order creation -> file upload mock -> extraction mock -> validation -> calculation -> PDF generation.

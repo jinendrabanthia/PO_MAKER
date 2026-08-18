@@ -113,15 +113,24 @@
 
   <div class="meta-grid">
     <div class="meta-box">
-      <div class="meta-row"><div class="meta-label">Customer:</div><div>{{customerName}}</div></div>
-      <div class="meta-row"><div class="meta-label">Reference:</div><div>{{reference}}</div></div>
-      <div class="meta-row"><div class="meta-label">Agency:</div><div>{{agency}}</div></div>
+      <strong>BUYER:</strong>
+      <div class="meta-row"><div class="meta-label">Name:</div><div>{{companyTemplate.buyerName}}</div></div>
+      <div class="meta-row"><div class="meta-label">City:</div><div>{{companyTemplate.buyerCity}}</div></div>
+      <div class="meta-row"><div class="meta-label">Mobile:</div><div>{{companyTemplate.buyerMobile}}</div></div>
+      <div class="meta-row"><div class="meta-label">Ref:</div><div>{{companyTemplate.buyerRef}}</div></div>
+      <div class="meta-row"><div class="meta-label">Agency:</div><div>{{companyTemplate.buyerAgency}}</div></div>
     </div>
     <div class="meta-box">
-      <div class="meta-row"><div class="meta-label">Order No:</div><div>{{orderNumber}}</div></div>
-      <div class="meta-row"><div class="meta-label">Date:</div><div>{{orderDate}}</div></div>
-      <div class="meta-row"><div class="meta-label">Status:</div><div>{{status}}</div></div>
+      <strong>SELLER:</strong>
+      <div class="meta-row"><div class="meta-label">Name:</div><div>{{companyTemplate.sellerName}}</div></div>
+      <div class="meta-row"><div class="meta-label">GSTIN:</div><div>{{companyTemplate.sellerGstin}}</div></div>
+      <div class="meta-row"><div class="meta-label">Phone:</div><div>{{companyTemplate.sellerPhone}}</div></div>
     </div>
+  </div>
+  
+  <div style="text-align: right; margin-bottom: 10px;">
+    <strong>Order No:</strong> {{orderNumber}} &nbsp;|&nbsp; 
+    <strong>Date:</strong> {{orderDateStr}}
   </div>
 
   <table>
@@ -129,8 +138,7 @@
       <tr>
         <th>S.No</th>
         <th>Image</th>
-        <th>Product Code</th>
-        <th>Design Code</th>
+        <th>Code</th>
         <th>Qty</th>
         <th>Net Price</th>
         <th>Sizes (#)</th>
@@ -139,18 +147,26 @@
       </tr>
     </thead>
     <tbody>
-      {{#each products}}
+      {{#each groupedProducts}}
+      <tr>
+        <td colspan="8" style="text-align: left; background-color: #e2e8f0; font-weight: bold;">Category: {{this.category}}</td>
+      </tr>
+      {{#each this.products}}
       <tr>
         <td>{{increment @index}}</td>
-        <td style="width: 50px; height: 50px; background-color: #fcfcfc;"></td>
+        <td style="width: 50px; height: 50px; background-color: #fcfcfc;">
+          {{#if this.imageUrl}}
+            <img src="{{this.imageUrl}}" style="max-width: 50px; max-height: 50px;" />
+          {{/if}}
+        </td>
         <td>{{this.productCode}}</td>
-        <td>{{this.designCode}}</td>
         <td>{{this.quantity}}</td>
         <td>₹{{this.netPrice}}</td>
         <td>{{this.sizeCount}}</td>
         <td>{{this.sizesDisplay}}</td>
         <td class="text-right">₹{{this.lineTotal}}</td>
       </tr>
+      {{/each}}
       {{/each}}
     </tbody>
   </table>

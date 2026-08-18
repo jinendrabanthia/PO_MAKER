@@ -19,16 +19,12 @@ export async function POST(req: NextRequest) {
 
     const orderData = parsed.data
 
-    // Find or create customer based on reference or agency
-    const customerName = orderData.reference || orderData.agency || "Unknown Customer"
-    let customer = await prisma.customer.findFirst({
-      where: { name: customerName }
+    const template = await prisma.companyTemplate.findUnique({
+      where: { id: orderData.companyTemplateId }
     })
 
-    if (!customer) {
-      customer = await prisma.customer.create({
-        data: { name: customerName, agency: orderData.agency }
-      })
+    if (!template) {
+      return NextResponse.json({ error: "Invalid Template ID" }, { status: 400 })
     }
 
     // Upsert products to catalog and create Order
@@ -37,9 +33,7 @@ export async function POST(req: NextRequest) {
       const newOrder = await tx.order.create({
         data: {
           orderNumber: orderData.orderNumber,
-          customerId: customer!.id, // Use the real customer ID
-          reference: orderData.reference,
-          agency: orderData.agency,
+          companyTemplateId: template.id,
           advancePayment: orderData.advancePayment,
           remark: orderData.remark,
           totalQty: orderData.totalQty,
@@ -54,21 +48,22 @@ export async function POST(req: NextRequest) {
                 : p.sizes || []
                 
               return {
+                category: p.category || "General",
                 productCode: p.productCode,
-                designCode: p.designCode,
                 quantity: p.quantity,
                 netPrice: p.netPrice,
                 sizeCount: p.sizeCount,
                 sizes: sizesArray,
                 lineTotal: p.lineTotal,
                 sortOrder: p.sortOrder || index,
+                imageUrl: p.imageUrl
               }
             })
           }
         },
         include: {
           products: true,
-          customer: true
+          companyTemplate: true
         }
       })
       
@@ -76,7 +71,7 @@ export async function POST(req: NextRequest) {
     })
 
     // Generate the PDF Buffer
-    const pdfBuffer = await generateOrderPdf(orderData as any, customer.name)
+    const pdfBuffer = await generateOrderPdf(createdOrder as any)
 
     // Return the PDF to the client
     return new NextResponse(pdfBuffer as any, {

@@ -17,12 +17,20 @@ export interface User {
   updatedAt: Date;
 }
 
-export interface Customer {
+export interface CompanyTemplate {
   id: string;
-  name: string;
-  city?: string;
-  mobile?: string;
-  agency?: string;
+  templateName: string;
+  buyerName: string;
+  buyerCity?: string;
+  buyerMobile?: string;
+  buyerRef?: string;
+  buyerAgency?: string;
+  sellerName: string;
+  sellerAddress?: string;
+  sellerPhone?: string;
+  sellerEmail?: string;
+  sellerGstin?: string;
+  sellerWebsite?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -30,7 +38,6 @@ export interface Customer {
 export interface Product {
   id: string;
   productCode: string;
-  designCode?: string;
   defaultPrice: number;
   defaultSizes: string[];
   imageUrl?: string;
@@ -42,9 +49,7 @@ export interface Product {
 export interface Order {
   id: string;
   orderNumber: string;
-  customerId: string;
-  reference?: string;
-  agency?: string;
+  companyTemplateId: string;
   orderDate?: Date;
   advancePayment: number;
   advanceMode?: string;
@@ -60,8 +65,8 @@ export interface Order {
 export interface OrderProduct {
   id: string;
   orderId: string;
+  category: string;
   productCode?: string;
-  designCode?: string;
   quantity: number;
   netPrice: number;
   sizeCount: number;

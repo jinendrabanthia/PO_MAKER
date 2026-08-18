@@ -14,11 +14,9 @@ Phase 3
 Validation + Confirmation
 
 JSON → validated order
-Phase 4
-
-WhatsApp
-
-WhatsApp → Backend → PDF
+Phase 7: PDF/Excel/image import -> DB
+Phase 8: AI extraction and review
+Phase 9: Pipeline -> Backend -> PDF
 Phase 5
 
 Admin Dashboard

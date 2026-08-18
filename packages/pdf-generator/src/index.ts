@@ -11,9 +11,9 @@ Handlebars.registerHelper("increment", (value: number) => value + 1)
  * Enhanced Order Type specifically tailored for the template's presentation layer.
  */
 interface TemplateOrderData extends Order {
-  customerName?: string;
   orderDateStr?: string;
-  products: (OrderProduct & { sizesDisplay: string })[];
+  groupedProducts: { category: string; products: any[] }[];
+  companyTemplate: any;
 }
 
 /**
@@ -21,7 +21,7 @@ interface TemplateOrderData extends Order {
  * @param order The strictly validated Order object.
  * @returns Buffer containing the raw PDF data.
  */
-export async function generateOrderPdf(order: Order, customerName: string = "Walk-in Customer"): Promise<Buffer> {
+export async function generateOrderPdf(order: any): Promise<Buffer> {
   // Read template from local file system
   const templatePath = path.join(__dirname, "template.hbs")
   
@@ -36,15 +36,27 @@ export async function generateOrderPdf(order: Order, customerName: string = "Wal
   
   const template = Handlebars.compile(rawTemplate)
 
+  const grouped = (order.products || []).reduce((acc: any, p: any) => {
+    const cat = p.category || "General";
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push({
+      ...p,
+      sizesDisplay: p.sizes?.join(", ") || "-"
+    });
+    return acc;
+  }, {});
+
+  const groupedProducts = Object.keys(grouped).map(cat => ({
+    category: cat,
+    products: grouped[cat]
+  }));
+
   // Hydrate Template Data
   const templateData: TemplateOrderData = {
     ...order,
-    customerName,
+    companyTemplate: order.companyTemplate,
     orderDateStr: order.orderDate ? new Date(order.orderDate).toLocaleDateString() : new Date().toLocaleDateString(),
-    products: (order.products || []).map(p => ({
-      ...p,
-      sizesDisplay: p.sizes?.join(", ") || "-"
-    }))
+    groupedProducts
   }
 
   const htmlContent = template(templateData)

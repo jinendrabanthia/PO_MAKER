@@ -14,7 +14,7 @@ Build a production-quality full-stack web application that allows users to creat
 - **Extraction Review**: A dedicated UI to review, correct, and confirm AI-extracted data before importing.
 - **Deterministic Calculation**: Totals and pricing are computed deterministically using TypeScript (no AI math).
 - **PDF Generation & Preview**: Render a professional, pixel-perfect PDF using HTML/CSS and Playwright, with a browser-based preview identical to the final output.
-- **Channel Independent**: Built modularly so WhatsApp integration can be easily added in the future.
+- **Channel Independent**: Built modularly to support generic web interfaces.
 
 ### 3. Core User Journey
 Dashboard -> Create New Order -> Enter Customer Info -> Add Products OR Upload File -> Extract Product Info -> Review + Edit -> Calculate Totals -> Preview PDF -> Generate PDF -> Download / Save.

@@ -17,8 +17,6 @@ OrderFlow is containerized using Docker, allowing it to run on any environment s
 ## Environment Variables
 - `DATABASE_URL`
 - `REDIS_URL`
-- `WHATSAPP_TOKEN`
-- `WHATSAPP_WEBHOOK_VERIFY_TOKEN`
 - `GEMINI_API_KEY`
 - `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`
 

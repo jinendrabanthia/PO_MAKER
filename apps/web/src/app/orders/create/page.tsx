@@ -4,10 +4,16 @@ import { CreateOrderForm } from "@/components/orders/create-order-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Upload } from "lucide-react"
+import { getTemplates } from "@/app/actions"
 
 export default function CreateOrderPage() {
   const [isExtracting, setIsExtracting] = React.useState(false)
   const [initialData, setInitialData] = React.useState<any>(null)
+  const [templates, setTemplates] = React.useState<any[]>([])
+
+  React.useEffect(() => {
+    getTemplates().then(setTemplates).catch(console.error)
+  }, [])
 
   async function handleFileUpload(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -60,11 +66,11 @@ export default function CreateOrderPage() {
         </div>
       </div>
       
-      {/* 
-        Key changes when initialData changes to force remount/reset of the form. 
-        Alternatively, CreateOrderForm can use useEffect to call form.reset()
-      */}
-      <CreateOrderForm key={JSON.stringify(initialData)} initialData={initialData} />
+      {templates.length > 0 ? (
+        <CreateOrderForm key={JSON.stringify(initialData)} initialData={initialData} templates={templates} />
+      ) : (
+        <p>Loading templates...</p>
+      )}
     </div>
   )
 }

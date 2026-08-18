@@ -16,6 +16,4 @@
 - `GET /api/admin/products` - List products
 - `GET /api/admin/logs` - List audit logs
 
-## Webhooks
-- `GET /webhooks/whatsapp` - Verify webhook (Cloud API requirement)
-- `POST /webhooks/whatsapp` - Receive messages and status updates
+### Internal APIs
