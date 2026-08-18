@@ -1,5 +1,5 @@
 "use client"
-
+import * as React from "react"
 import { useForm, useFieldArray } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { OrderSchema } from "@orderflow/validation"
@@ -21,19 +21,23 @@ import { Plus, Trash2 } from "lucide-react"
 
 type OrderFormValues = z.infer<typeof OrderSchema>
 
-export function CreateOrderForm() {
+interface CreateOrderFormProps {
+  initialData?: Partial<OrderFormValues>
+}
+
+export function CreateOrderForm({ initialData }: CreateOrderFormProps) {
   const form = useForm<OrderFormValues>({
     resolver: zodResolver(OrderSchema) as any,
     defaultValues: {
       orderNumber: `ORD-${Date.now()}`,
       customerId: "00000000-0000-0000-0000-000000000000", // Mock UUID for now
-      reference: "",
-      agency: "",
-      advancePayment: 0,
-      remark: "",
+      reference: initialData?.reference || "",
+      agency: initialData?.agency || "",
+      advancePayment: initialData?.advancePayment || 0,
+      remark: initialData?.remark || "",
       totalQty: 0,
       grandTotal: 0,
-      products: [
+      products: initialData?.products?.length ? initialData.products : [
         {
           productCode: "",
           designCode: "",
@@ -77,27 +81,58 @@ export function CreateOrderForm() {
     { totalQty: 0, grandTotal: 0 }
   ) || { totalQty: 0, grandTotal: 0 }
 
-  function onSubmit(data: OrderFormValues) {
-    // Inject calculated totals before submission
-    const finalData = {
-      ...data,
-      totalQty: totals.totalQty,
-      grandTotal: totals.grandTotal,
-      products: data.products?.map((p) => {
-        const sizesArray = typeof p.sizes === "string" 
-          ? (p.sizes as string).split(",").map((s) => s.trim()).filter(Boolean)
-          : p.sizes || []
-        const { lineTotal, sizeCount } = calculateLineTotals({ ...p, sizes: sizesArray })
-        return {
-          ...p,
-          sizes: sizesArray,
-          lineTotal,
-          sizeCount,
-        }
-      }),
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
+
+  async function onSubmit(data: OrderFormValues) {
+    setIsSubmitting(true)
+    try {
+      const finalData = {
+        ...data,
+        totalQty: totals.totalQty,
+        grandTotal: totals.grandTotal,
+        products: data.products?.map((p) => {
+          const sizesArray = typeof p.sizes === "string" 
+            ? (p.sizes as string).split(",").map((s) => s.trim()).filter(Boolean)
+            : p.sizes || []
+          const { lineTotal, sizeCount } = calculateLineTotals({ ...p, sizes: sizesArray })
+          return {
+            ...p,
+            sizes: sizesArray,
+            lineTotal,
+            sizeCount,
+          }
+        }),
+      }
+
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(finalData),
+      })
+
+      if (!response.ok) {
+        const errorData = await response.json()
+        throw new Error(errorData.error || "Failed to generate PDF")
+      }
+
+      // Handle binary stream
+      const blob = await response.blob()
+      const downloadUrl = window.URL.createObjectURL(blob)
+      const link = document.createElement("a")
+      link.href = downloadUrl
+      link.download = `order-${finalData.orderNumber}.pdf`
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      window.URL.revokeObjectURL(downloadUrl)
+
+      alert("PDF Generated and Downloaded Successfully!")
+    } catch (error: any) {
+      console.error(error)
+      alert("Error: " + error.message)
+    } finally {
+      setIsSubmitting(false)
     }
-    console.log("Validated Order Data:", finalData)
-    alert("Order validation successful! Check console for payload.")
   }
 
   return (
@@ -313,8 +348,10 @@ export function CreateOrderForm() {
         </Card>
 
         <div className="flex justify-end gap-4">
-          <Button type="button" variant="outline">Save Draft</Button>
-          <Button type="submit">Validate & Create Order</Button>
+          <Button type="button" variant="outline" disabled={isSubmitting}>Save Draft</Button>
+          <Button type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Generating PDF..." : "Validate & Create Order"}
+          </Button>
         </div>
 
       </form>

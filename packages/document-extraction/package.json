@@ -1,0 +1,16 @@
+{
+  "name": "@orderflow/document-extraction",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@orderflow/shared-types": "*"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
