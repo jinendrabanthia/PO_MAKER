@@ -4,6 +4,14 @@ dist/
 build/
 *.log
 .DS_Store
-packages/pdf-template/test-output.pdf
 .agents/brain/
 .gemini/
+
+# Next.js
+.next/
+out/
+.vercel/
+
+# Testing/Task files
+task.md
+*.pdf
