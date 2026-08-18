@@ -1,0 +1,102 @@
+{
+  "order": {
+    "customer": {
+      "name": "Odisha, India",
+      "mobile": "9078000369",
+      "agency": "JM Jain"
+    },
+    "metadata": {
+      "ref": "Surat Dreams Aug 26",
+      "orderFormNo": "5337",
+      "orderDate": "18-Aug-26",
+      "advancePayment": "0",
+      "advanceMode": "None",
+      "printDate": "18-Aug-26 03:38 PM",
+      "remark": ""
+    },
+    "products": [
+      {
+        "sNo": 1,
+        "image": "https://placehold.co/100x150/e0e0e0/555555?text=Product+1",
+        "code": "2037740 / #464",
+        "qty": 1,
+        "netPrice": 1049,
+        "sizeCount": 5,
+        "sizes": "38,40,42,44,46",
+        "lineTotal": 5245
+      },
+      {
+        "sNo": 2,
+        "image": "https://placehold.co/100x150/e0e0e0/555555?text=Product+2",
+        "code": "2059281 / #1316",
+        "qty": 1,
+        "netPrice": 1329,
+        "sizeCount": 5,
+        "sizes": "38,40,42,44,46",
+        "lineTotal": 6645
+      },
+      {
+        "sNo": 3,
+        "image": "https://placehold.co/100x150/e0e0e0/555555?text=Product+3",
+        "code": "2062061 / #1576",
+        "qty": 1,
+        "netPrice": 1290,
+        "sizeCount": 4,
+        "sizes": "38,40,42,44",
+        "lineTotal": 5160
+      },
+      {
+        "sNo": 4,
+        "image": "https://placehold.co/100x150/e0e0e0/555555?text=Product+4",
+        "code": "2063449 / #1633",
+        "qty": 1,
+        "netPrice": 1099,
+        "sizeCount": 5,
+        "sizes": "38,40,42,44,46",
+        "lineTotal": 5495
+      },
+      {
+        "sNo": 5,
+        "image": "https://placehold.co/100x150/e0e0e0/555555?text=Product+5",
+        "code": "2064183 / #1812",
+        "qty": 1,
+        "netPrice": 1329,
+        "sizeCount": 5,
+        "sizes": "38,40,42,44,46",
+        "lineTotal": 6645
+      },
+      {
+        "sNo": 6,
+        "image": "https://placehold.co/100x150/e0e0e0/555555?text=Product+6",
+        "code": "2064554 / #1881",
+        "qty": 1,
+        "netPrice": 1549,
+        "sizeCount": 4,
+        "sizes": "38,40,42,44",
+        "lineTotal": 6196
+      },
+      {
+        "sNo": 7,
+        "image": "https://placehold.co/100x150/e0e0e0/555555?text=Product+7",
+        "code": "2065286 / #2069",
+        "qty": 1,
+        "netPrice": 1599,
+        "sizeCount": 5,
+        "sizes": "38,40,42,44,46",
+        "lineTotal": 7995
+      },
+      {
+        "sNo": 8,
+        "image": "https://placehold.co/100x150/e0e0e0/555555?text=Product+8",
+        "code": "2069054 / #2580",
+        "qty": 1,
+        "netPrice": 1069,
+        "sizeCount": 5,
+        "sizes": "38,40,42,44,46",
+        "lineTotal": 5345
+      }
+    ],
+    "totalQty": 38,
+    "grandTotal": 48726
+  }
+}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Form</title>
+  <style>
+    /* CSS injected here for standalone testing if needed, or linked */
+    {{{styles}}}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-left">
+      <div class="company-name">SNK</div>
+      <div class="meta-grid">
+        <div class="meta-label">City:</div><div class="meta-value">{{order.customer.name}}</div>
+        <div class="meta-label">Mobile:</div><div class="meta-value">{{order.customer.mobile}}</div>
+        
+        <div class="meta-label">Ref:</div><div class="meta-value">{{order.metadata.ref}}</div>
+        <div class="meta-label">Agency:</div><div class="meta-value">{{order.customer.agency}}</div>
+        
+        <div class="meta-label">Order Form No:</div><div class="meta-value">{{order.metadata.orderFormNo}}</div>
+        <div class="meta-label">Order Date:</div><div class="meta-value">{{order.metadata.orderDate}}</div>
+        
+        <div class="meta-label">Advance Payment:</div><div class="meta-value">{{order.metadata.advancePayment}}</div>
+        <div class="meta-label">Advance Mode:</div><div class="meta-value">{{order.metadata.advanceMode}}</div>
+        
+        <div class="meta-label">Print Date:</div><div class="meta-value">{{order.metadata.printDate}}</div>
+        <div class="meta-label">Remark:</div><div class="meta-value">{{order.metadata.remark}}</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="logo">
+        <h1>READIPRINT<sup>&reg;</sup></h1>
+        <h2>F A S H I O N S</h2>
+      </div>
+      <div class="company-address">
+        42, lane # 4, kartarpura industrial area<br>
+        bais godam, jaipur, rajasthan - 302006, india<br>
+        phone : 0141-4028090, +91-99297 79828<br>
+        e-mail : wholesale@readiprintfashions.com<br>
+        GSTIN : 08AAOFR2619A2ZB<br>
+        <strong>website : ws.readiprintfashions.com</strong>
+      </div>
+    </div>
+  </div>
+
+  <table class="order-table">
+    <thead>
+      <tr>
+        <th style="width: 5%">S No</th>
+        <th style="width: 15%">Product</th>
+        <th style="width: 25%">Code</th>
+        <th style="width: 10%">Qty</th>
+        <th style="width: 15%">Net Price</th>
+        <th style="width: 15%">No Of Sizes</th>
+        <th style="width: 15%">Grand Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each order.products}}
+      <tr>
+        <td class="center">{{this.sNo}}</td>
+        <td class="center p-0"><img src="{{this.image}}" alt="Product" class="product-img"></td>
+        <td class="center">{{this.code}}</td>
+        <td class="center">{{this.qty}}</td>
+        <td class="center">{{this.netPrice}}</td>
+        <td class="center">
+          <div class="size-count">{{this.sizeCount}}</div>
+          <div class="sizes">{{this.sizes}}</div>
+        </td>
+        <td class="center">{{this.lineTotal}}</td>
+      </tr>
+      {{/each}}
+      <!-- Footer Row -->
+      <tr class="footer-row">
+        <td colspan="5" class="empty-cell"></td>
+        <td class="left bold">Total Qty: {{order.totalQty}}</td>
+        <td class="left bold">
+          <div>Grand Total: {{order.grandTotal}}</div>
+          <div class="gst-note">Plus GST as<br>Applicable</div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "@orderflow/pdf-template",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "generate-pdf-fixture": "tsx scripts/generate.ts"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.8",
+    "playwright": "^1.40.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "@types/node": "^20.0.0"
+  }
+}

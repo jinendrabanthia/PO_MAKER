@@ -1,0 +1,9 @@
+node_modules/
+.env
+dist/
+build/
+*.log
+.DS_Store
+packages/pdf-template/test-output.pdf
+.agents/brain/
+.gemini/

@@ -1,0 +1,140 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum OrderStatus {
+  DRAFT
+  IMPORTING
+  REVIEW_REQUIRED
+  READY
+  GENERATING
+  GENERATED
+  ARCHIVED
+  FAILED
+}
+
+enum FileType {
+  SOURCE_DOCUMENT
+  GENERATED_PDF
+  PRODUCT_IMAGE
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  role         String   @default("ADMIN")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Customer {
+  id        String   @id @default(uuid())
+  name      String
+  city      String?
+  mobile    String?
+  agency    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  orders    Order[]
+}
+
+model Product {
+  id           String   @id @default(uuid())
+  productCode  String   @unique
+  designCode   String?
+  defaultPrice Float    @default(0)
+  defaultSizes Json     @default("[]") // Array of string sizes
+  imageUrl     String?
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Order {
+  id             String          @id @default(uuid())
+  orderNumber    String          @unique
+  customerId     String
+  customer       Customer        @relation(fields: [customerId], references: [id])
+  reference      String?
+  agency         String?
+  orderDate      DateTime?
+  advancePayment Float           @default(0)
+  advanceMode    String?
+  remark         String?
+  status         OrderStatus     @default(DRAFT)
+  totalQty       Int             @default(0)
+  grandTotal     Float           @default(0)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  products       OrderProduct[]
+  files          UploadedFile[]
+  jobs           ProcessingJob[]
+  logs           AuditLog[]
+  generatedDocs  GeneratedDocument[]
+}
+
+model OrderProduct {
+  id          String   @id @default(uuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productCode String?
+  designCode  String?
+  quantity    Int      @default(1)
+  netPrice    Float    @default(0)
+  sizeCount   Int      @default(1)
+  sizes       Json     @default("[]") // Array of string sizes
+  lineTotal   Float    @default(0)
+  imageUrl    String?
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model UploadedFile {
+  id        String             @id @default(uuid())
+  orderId   String
+  order     Order              @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  url       String
+  mimeType  String
+  size      Int
+  type      FileType
+  createdAt DateTime           @default(now())
+  generated GeneratedDocument?
+}
+
+model GeneratedDocument {
+  id        String       @id @default(uuid())
+  orderId   String
+  order     Order        @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  fileId    String       @unique
+  file      UploadedFile @relation(fields: [fileId], references: [id], onDelete: Cascade)
+  version   Int          @default(1)
+  createdAt DateTime     @default(now())
+}
+
+model ProcessingJob {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  type      String
+  status    String   @default("PENDING")
+  attempts  Int      @default(0)
+  error     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  orderId   String
+  order     Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  action    String
+  details   Json     @default("{}")
+  createdAt DateTime @default(now())
+}
