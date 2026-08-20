@@ -9,7 +9,7 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "eslint .",
+    "lint": "npm run lint --workspaces --if-present",
     "db:push": "prisma db push",
     "db:generate": "prisma generate"
   },

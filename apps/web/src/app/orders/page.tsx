@@ -17,7 +17,7 @@ export const dynamic = "force-dynamic"
 export default async function OrdersPage() {
   const orders = await prisma.order.findMany({
     include: {
-      customer: true,
+      companyTemplate: true,
     },
     orderBy: {
       createdAt: "desc",
@@ -66,8 +66,8 @@ export default async function OrdersPage() {
               <TableRow key={order.id}>
                 <TableCell className="font-medium">{order.orderNumber}</TableCell>
                 <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
-                <TableCell>{order.customer.name}</TableCell>
-                <TableCell>{order.agency || "-"}</TableCell>
+                <TableCell>{order.companyTemplate.buyerName}</TableCell>
+                <TableCell>{order.companyTemplate.buyerAgency || "-"}</TableCell>
                 <TableCell className="text-right">{order.totalQty}</TableCell>
                 <TableCell className="text-right">₹{order.grandTotal.toFixed(2)}</TableCell>
                 <TableCell>{order.status}</TableCell>

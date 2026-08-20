@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     const orderData = parsed.data
 
     // Generate the PDF Buffer
-    const pdfBuffer = await generateOrderPdf(orderData as any, "Customer via OrderFlow")
+    const pdfBuffer = await generateOrderPdf(orderData as any)
 
     // Return the PDF to the client
     return new NextResponse(pdfBuffer as any, {

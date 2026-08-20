@@ -1,0 +1,31 @@
+. Order State Machine
+
+Use explicit states:
+
+CREATED
+   ↓
+COLLECTING
+   ↓
+PROCESSING
+   ↓
+EXTRACTED
+   ↓
+NEEDS_CORRECTION
+   ↓
+AWAITING_CONFIRMATION
+   ↓
+CONFIRMED
+   ↓
+PDF_GENERATING
+   ↓
+PDF_READY
+   ↓
+SENT
+
+Failure:
+
+ANY STATE
+   ↓
+FAILED
+   ↓
+RETRY
